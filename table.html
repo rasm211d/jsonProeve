@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JsonTAbles</title>
+</head>
+<body>
+    <h1>This is showing tables that include takes data from JSON files</h1>
+    <select name="selector" id="myselect" onchange="change_myselect(this.value)">
+        <option value="">Choose an option</option>
+        <option value="biler">Biler</option>
+        <option value="brugere">Brugere</option>
+        <option value="bookinger">Bookinger</option>
+    </select>
+
+    <script>
+        function change_myselect(select) {
+            var obj, dbParam, xmlhttp, myObj, x, txt ="";
+            obj = { table: select, limit: 20};
+            dbParam = JSON.stringify(obj);
+            xmlhttp = new XMLHttpRequest(obj);
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    myObj = JSON.parse(this.responseText);
+                    txt +="<table border ='1'>";
+                    for (x in myObj) {
+                        txt += "<tr><td>" + myObj[x].pris + "</td></tr>";
+                    }
+                    txt += "</table>"
+                    document.getElementById("demo").innerHTML = txt;
+                } 
+            };
+            xmlhttp.open("POST", "biler.json", true);
+            xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xmlhttp.send("x=" + dbParam);
+        }
+    </script>
+</body>
+</html>
